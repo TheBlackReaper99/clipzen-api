@@ -36,6 +36,8 @@ app.get('/proxy', async (req, res) => {
     const nombreArchivo = req.query.nombre || 'clipzen-video.mp4';
     const cd = 'attachment; filename="' + nombreArchivo + '"';
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     res.setHeader('Content-Type', response.headers['content-type'] || 'video/mp4');
     res.setHeader('Content-Disposition', cd);
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -44,8 +46,4 @@ app.get('/proxy', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al descargar archivo' });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor Clipzen corriendo en http://localhost:${PORT}`);
 });
