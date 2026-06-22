@@ -47,3 +47,8 @@ app.get('/proxy', async (req, res) => {
     res.status(500).json({ error: 'Error al descargar archivo' });
   }
 });
+
+// ⚠️ Sin esta línea el servidor se cierra inmediatamente
+app.listen(PORT, () => {
+  console.log(`Servidor Clipzen corriendo en http://localhost:${PORT}`);
+});
