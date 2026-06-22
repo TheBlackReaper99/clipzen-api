@@ -33,14 +33,11 @@ app.get('/proxy', async (req, res) => {
 
   try {
     const response = await axios.get(url, { responseType: 'stream' });
+    const nombreArchivo = req.query.nombre || 'clipzen-video.mp4';
     res.setHeader('Content-Type', response.headers['content-type'] || 'video/mp4');
-    res.setHeader('Content-Disposition', 'attachment');
+    res.setHeader('Content-Disposition', `attachment; filename="${nombreArchivo}"`);
     response.data.pipe(res);
   } catch (error) {
     res.status(500).json({ error: 'Error al descargar archivo' });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor Clipzen corriendo en http://localhost:${PORT}`);
 });
