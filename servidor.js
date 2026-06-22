@@ -7,6 +7,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.send('⚔️ Servidor de Clipzen funcionando — Black Reaper Studios');
+});
+
+// Obtiene info del video (título, miniatura, links)
 app.get('/descargar', async (req, res) => {
   const url = req.query.url;
   if (!url) return res.status(400).json({ error: 'Falta el parámetro url' });
@@ -20,8 +26,19 @@ app.get('/descargar', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('⚔️ Servidor de Clipzen funcionando — Black Reaper Studios');
+// Descarga el archivo real y lo manda al navegador
+app.get('/proxy', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'Falta url' });
+
+  try {
+    const response = await axios.get(url, { responseType: 'stream' });
+    res.setHeader('Content-Type', response.headers['content-type'] || 'video/mp4');
+    res.setHeader('Content-Disposition', 'attachment');
+    response.data.pipe(res);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al descargar archivo' });
+  }
 });
 
 app.listen(PORT, () => {
