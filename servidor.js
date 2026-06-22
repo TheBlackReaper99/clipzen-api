@@ -26,7 +26,7 @@ app.get('/descargar', async (req, res) => {
   }
 });
 
-// Descarga el archivo real
+// Descarga el archivo real (para PC)
 app.get('/proxy', async (req, res) => {
   const url = req.query.url;
   if (!url) return res.status(400).json({ error: 'Falta url' });
@@ -46,6 +46,13 @@ app.get('/proxy', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al descargar archivo' });
   }
+});
+
+// Redirige directo a la URL del video (para móviles)
+app.get('/redirigir', (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'Falta url' });
+  res.redirect(url);
 });
 
 // ⚠️ Sin esta línea el servidor se cierra inmediatamente
