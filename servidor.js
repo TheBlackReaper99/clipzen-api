@@ -35,7 +35,8 @@ app.get('/proxy', async (req, res) => {
     const response = await axios.get(url, { responseType: 'stream' });
     const nombreArchivo = req.query.nombre || 'clipzen-video.mp4';
     res.setHeader('Content-Type', response.headers['content-type'] || 'video/mp4');
-    res.setHeader('Content-Disposition', `attachment; filename="${nombreArchivo}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${nombreArchivo}"; filename*=UTF-8''${encodeURIComponent(nombreArchivo)}`);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     response.data.pipe(res);
   } catch (error) {
     res.status(500).json({ error: 'Error al descargar archivo' });
